@@ -1,7 +1,10 @@
+
 <template>
+    <center>
     <form @submit.prevent="handleSubmit">
  <label>Email:</label>
-        <input type="email" required  v-model="email">    
+        <input type="email" required  v-model="email">  
+        <div v-if="emailErrors" class="errors">{{ emailErrors }}</div>  
          <label>Password:</label>
         <input type="password" required v-model="password" > 
         <div v-if="passwordError" class="error">{{ passwordError }}</div>
@@ -13,10 +16,10 @@
         <label>
             Skills:
         </label>
-        <input type="text" v-model="tempSkill" @keyup.alt="addSkill">
+        <input type="text" v-model="tempSkill" @keyup="addSkill">
         <div v-for="skill in skills" :key="skill" class="pill">
         
-        <span @click="deleteSkill(skill)">{{ skill }}</span>
+        <span @click="deleteSkill(skill)">{{ skill }}</span> 
         </div>
         <div class="terms">
             <input type="checkbox"  v-model="terms" required>
@@ -27,12 +30,14 @@
        <div class="submit">
         <button>Create an Account</button>
        </div>
-        
     </form>
-    <p>Email: {{ email }}</p>
+    </center>
+        
+    
+    <!-- <p>Email: {{ email }}</p>
     <p>Password: {{ password }}</p>
     <p>Role: {{ role }}</p>
-    <p>Terms accepted : {{ terms }}</p>
+    <p>Terms accepted : {{ terms }}</p> -->
     </template>
     <script>
         export default{
@@ -44,27 +49,36 @@
          terms: false,
          tempSkill: '',
          skills: [],
-         passwordError:''
+         passwordError: '',
+         emailErrors: ''
         }
     },
     methods:{
         addSkill(e){
-            if(e.key === ','&& this.tempSkill){
-                if(!this.skills.includes(this.tempSkill)){
+            if(e.key === ',' && this.tempSkill) {
+                if(!this.skills.includes(this.tempSkill)) {
                     this.skills.push(this.tempSkill)   
                 }
                 
                 this.tempSkill = ''
             }
         },
-        deleteSkill(skill){
+      deleteSkill(skill){
 this.skills = this.skills.filter((item)=>{
     return skill !== item
-}) 
-        },
+ }) 
+         },
         handleSubmit(){
     this.passwordError = this.password.length > 5 ? '': 'password must be atleast 6 words'
-        }
+   if(!this.passwordError)  {
+    console.log('email:',this.email)
+    console.log('password:',this.password)
+    console.log('role:',this.role)
+    console.log('skills:',this.skills)
+    console.log('terms accepted:',this.terms)
+   } 
+   this.emailErrors = this.email.length >10 ? '': 'Enter valid email'  
+}
     }
         }
     
@@ -79,7 +93,7 @@ this.skills = this.skills.filter((item)=>{
         border-radius: 10px;
     }
     label{
-        color:#aaa;
+        color:black;
         display:inline-block;
         margin: 25px 0 15px;
         font-size: 0.6em;
@@ -128,5 +142,18 @@ this.skills = this.skills.filter((item)=>{
     .submit{
         text-align: center;
     }
-    
+   .error{
+    color:red;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+
+   } 
+   .errors{
+    color:red;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+   }
     </style>
+
