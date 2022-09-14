@@ -18,8 +18,10 @@
         </label>
         <input type="text" v-model="tempSkill" @keyup="addSkill">
         <div v-for="skill in skills" :key="skill" class="pill">
+            <div>
+</div>
         
-        <span @click="deleteSkill(skill)">{{ skill }}</span> 
+        <span @click="deleteSkill(skill)">{{ skill }}<i class="fa fa-times" aria-hidden="true" >X</i></span> 
         </div>
         <div class="terms">
             <input type="checkbox"  v-model="terms" required>
@@ -27,6 +29,7 @@
                 Accept terms and conditions
             </label>
         </div>
+    
        <div class="submit">
         <button>Create an Account</button>
        </div>
@@ -43,19 +46,21 @@
         export default{
     data(){
         return{
-         email: 'priya@innotechteam.in',
+         email: '',
          password : '',
          role: 'Web designer ',
          terms: false,
          tempSkill: '',
          skills: [],
          passwordError: '',
-         emailErrors: ''
+         emailErrors: '',
+         regularExpression:/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
         }
     },
     methods:{
         addSkill(e){
-            if(e.key === ',' && this.tempSkill) {
+            
+            if(e.key === ',' ||(e.keyCode === 13) && this.tempSkill) {
                 if(!this.skills.includes(this.tempSkill)) {
                     this.skills.push(this.tempSkill)   
                 }
@@ -69,7 +74,10 @@ this.skills = this.skills.filter((item)=>{
  }) 
          },
         handleSubmit(){
-    this.passwordError = this.password.length > 5 ? '': 'password must be atleast 6 words'
+    // this.passwordError = this.password.length > 5 ? '': 'password must be atleast 6 words'
+    if (!this.regularExpression.test(this.password)){
+        this.passwordError ='Password length should be 8 char,1 special char,1 number,1 uppercase,and 1 lowercase'
+    }
    if(!this.passwordError)  {
     console.log('email:',this.email)
     console.log('password:',this.password)
@@ -87,13 +95,13 @@ this.skills = this.skills.filter((item)=>{
     form{
         max-width: 420px;
         margin: 30px,auto;
-        background: skyblue;
+        background: white;
         text-align: left;
         padding: 40px;
         border-radius: 10px;
     }
     label{
-        color:black;
+        color:#aaa;
         display:inline-block;
         margin: 25px 0 15px;
         font-size: 0.6em;
@@ -119,6 +127,7 @@ this.skills = this.skills.filter((item)=>{
         top: 2px;
     }
     .pill{
+        border-radius: 20px;
          display:inline-block ;
          margin:20px 10px 0 0;
         padding: 6px 12px;
@@ -155,5 +164,6 @@ this.skills = this.skills.filter((item)=>{
     font-weight: bold;
     margin-top: 10px;
    }
+   
     </style>
 
